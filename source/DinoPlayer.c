@@ -32,32 +32,60 @@
  * @file    DinoPlayer.c
  * @brief   Application entry point.
  */
-#include <stdio.h>
-#include "board.h"
-#include "peripherals.h"
-#include "pin_mux.h"
-#include "clock_config.h"
-#include "MKL25Z4.h"
-#include "fsl_debug_console.h"
+#include "init.h"
 /* TODO: insert other include files here. */
 #include "dino.h"
 /* TODO: insert other definitions and declarations here. */
 static int LDR_PORT = 0;
 static int SERVO_PORT = 0;
-dinoP1 dino;
+
+/* Variables for TPM */
+tpm_config_t tpmInfo;
+tpm_chnl_pwm_signal_param_t tpmParam;
+
+/* Variables for ADC16 */
+adc16_config_t adc16ConfigStruct;
+adc16_channel_config_t adc16ChannelConfigStruct;
+
+void InitAll(void);
+void ReadLDR(void);
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
+
+	InitAll();
 
     while(1) {
-
+    	ReadLDR();
     }
     return 0 ;
+}
+
+void ReadLDR(void)
+{
+
+	uint32_t adc = 0;
+
+	ADC16_SetChannelConfig(ADC0, ADC_CHANNEL_GROUP, &adc16ChannelConfigStruct);
+
+	while (0U == (kADC16_ChannelConversionDoneFlag &
+				  ADC16_GetChannelStatusFlags(ADC0, ADC_CHANNEL_GROUP)))
+	{
+		//wait...
+	}
+	adc = ADC16_GetChannelConversionValue(ADC0, ADC_CHANNEL_GROUP);
+	adc /= 409;
+	PRINTF("%d", adc);
+
+	//TPM_UpdatePwmDutycycle(TPM0, kTPM_Chnl_1, kTPM_CenterAlignedPwm, adc * 10);
+
+}
+void InitAll(void)
+{
+
+	InitBoard();
+	InitADC(&adc16ConfigStruct, &adc16ChannelConfigStruct);
+	InitTPM(&tpmInfo, &tpmParam);
+
 }
