@@ -58,9 +58,22 @@ int main(void) {
 	InitAll();
 
     while(1) {
+
+    	Release();
+
     	ReadLDR();
     }
     return 0 ;
+}
+
+void PressDown(void)
+{
+	TPM_UpdatePwmDutycycle(TPM0, kTPM_Chnl_1, kTPM_EdgeAlignedPwm, 3U);
+}
+
+void Release(void)
+{
+	TPM_UpdatePwmDutycycle(TPM0, kTPM_Chnl_1, kTPM_EdgeAlignedPwm, 2U);
 }
 
 void ReadLDR(void)

@@ -41,7 +41,7 @@ void InitTPM(tpm_config_t * tpmInfo, tpm_chnl_pwm_signal_param_t * tpmParam)
     TPM_Init(TPM0, tpmInfo);
 
     tpmParam->chnlNumber = (tpm_chnl_t) kTPM_Chnl_1;
-    tpmParam->dutyCyclePercent = 10U;
+    tpmParam->dutyCyclePercent = 11U;
     tpmParam->level = kTPM_HighTrue;
 
     TPM_SetupPwm(TPM0, tpmParam, 1U, kTPM_EdgeAlignedPwm, 50U, TPM_SOURCE_CLOCK);
