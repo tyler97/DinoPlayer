@@ -36,6 +36,9 @@
 /* TODO: insert other include files here. */
 #include "dino.h"
 #include <stdio.h>
+#include "Scheduler/gsc_sch_core.h"
+#include "Scheduler/gsc_sch_core_tick_isr.h"
+
 /* TODO: insert other definitions and declarations here. */
 
 /* Variables for TPM */
@@ -49,6 +52,8 @@ adc16_channel_config_t adc16ChannelConfigStruct;
 /* Variables for PIT */
 pit_config_t My_PIT;
 
+volatile unsigned int sys_tick_counter = 0;
+
 void InitAll(void);
 uint32_t ReadLDR(void);
 void PressDown(void);
@@ -61,12 +66,14 @@ void DinoPlay(void);
 static uint8_t count = 0;
 int main(void) {
 
-       	InitAll();
-    while(1)
-    {
-    	DinoPlay();
-    }
+    SysTick_Config(48000000U/1000U);
+
+    gsc_sch_core_Init();
+
+    gsc_sch_core_exec();
+
     return 0 ;
+
 }
 
 void DinoPlay(void)
@@ -127,6 +134,7 @@ uint32_t ReadLDR(void)
 	return adc;
 
 }
+
 void InitAll(void)
 {
 
@@ -134,6 +142,14 @@ void InitAll(void)
 	InitADC(&adc16ConfigStruct, &adc16ChannelConfigStruct);
 	InitTPM(&tpmInfo, &tpmParam);
 	InitPIT(&My_PIT);
+
+}
+
+void SysTick_Handler(void)
+{
+
+ 	sys_tick_counter++;
+ 	gsc_sch_core_tick_isr();
 
 }
 
