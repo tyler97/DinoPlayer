@@ -35,6 +35,7 @@
 #include "init.h"
 /* TODO: insert other include files here. */
 #include "dino.h"
+#include <stdio.h>
 /* TODO: insert other definitions and declarations here. */
 static int LDR_PORT = 0;
 static int SERVO_PORT = 0;
@@ -75,8 +76,7 @@ void ReadLDR(void)
 		//wait...
 	}
 	adc = ADC16_GetChannelConversionValue(ADC0, ADC_CHANNEL_GROUP);
-	adc /= 409;
-	PRINTF("%d", adc);
+	printf("%d\n", adc);
 
 	//TPM_UpdatePwmDutycycle(TPM0, kTPM_Chnl_1, kTPM_CenterAlignedPwm, adc * 10);
 
