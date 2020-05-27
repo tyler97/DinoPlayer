@@ -61,7 +61,7 @@ void DinoPlay(void);
 static uint8_t count = 0;
 int main(void) {
 
-    	InitAll();
+       	InitAll();
     while(1)
     {
     	DinoPlay();
