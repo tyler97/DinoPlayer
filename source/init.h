@@ -86,7 +86,7 @@ void InitPIT(pit_config_t * My_PIT)
     PIT_GetDefaultConfig(My_PIT);
     PIT_Init(PIT, My_PIT);
 
-    PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, MSEC_TO_COUNT(100,PIT_CLK_SRC_HZ_HP));
+    PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, MSEC_TO_COUNT(200,PIT_CLK_SRC_HZ_HP));
     PIT_EnableInterrupts(PIT,kPIT_Chnl_0, kPIT_TimerInterruptEnable);
     PIT_StopTimer(PIT, kPIT_Chnl_0);
 

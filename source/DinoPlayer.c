@@ -53,39 +53,51 @@ void InitAll(void);
 uint32_t ReadLDR(void);
 void PressDown(void);
 void Release(void);
+void DinoPlay(void);
 /*
  * @brief   Application entry point.
  */
+
+static uint8_t count = 0;
 int main(void) {
 
- 	InitAll();
+    	InitAll();
+    while(1)
+    {
+    	DinoPlay();
+    }
+    return 0 ;
+}
 
-    while(1) {
+void DinoPlay(void)
+{
 
-    	//Release();
-
-    	uint32_t ldr = ReadLDR();
-    	//printf("%u\n", ldr);
-    	if(ldr >= 750){
-    		Release();
-    	}
-    	else
-    	{
+	uint32_t ldr = ReadLDR();
+	if(ldr >= 900)
+	{
+		Release();
+		count=0;
+	}
+	else
+	{
+		count++;
+		if(count >= 3 )
+		{
     		PressDown();
     		uint8_t flag = 1;
     		PIT_StartTimer(PIT,kPIT_Chnl_0);
     		while(flag)
     		{
-    			uint32_t count = 100U - COUNT_TO_MSEC(PIT_GetCurrentTimerCount(PIT, kPIT_Chnl_0) , PIT_CLK_SRC_HZ_HP);
-    			if(count >= 80U)
+    			uint32_t time = 200U - COUNT_TO_MSEC(PIT_GetCurrentTimerCount(PIT, kPIT_Chnl_0) , PIT_CLK_SRC_HZ_HP);
+    			if(time >= 80U)
     			{
     				flag = 0;
     				PIT_StopTimer(PIT, kPIT_Chnl_0);
+    				count = 0;
     			}
     		}
-    	}
-    }
-    return 0 ;
+		}
+	}
 }
 
 void PressDown(void)
