@@ -29,9 +29,7 @@
 /*============================================================================*/
 /* List of headers of the modules executed from some of these periodic tasks  */
 /*============================================================================*/
-//#include "MyApplication.h"
-//#include "MyLowLayerDriver.h"
-#include "RGB_LEDs.h"
+#include "DinoPlayer.h"
 /*============================================================================*/
 
 #endif
