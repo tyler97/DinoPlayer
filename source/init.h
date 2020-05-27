@@ -21,7 +21,6 @@
 #define ADC_CHANNEL 15U
 #define ADC_CHANNEL_GROUP 0U
 #define TPM_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_PllFllSelClk)
-#define PIT_CLK_SRC_HZ_HP ((uint64_t)24000000)
 
 void InitBoard(void)
 {
@@ -38,13 +37,14 @@ void InitTPM(tpm_config_t * tpmInfo, tpm_chnl_pwm_signal_param_t * tpmParam)
     CLOCK_SetTpmClock(1U);
 
     TPM_GetDefaultConfig(tpmInfo);
+    tpmInfo->prescale = kTPM_Prescale_Divide_32;
     TPM_Init(TPM0, tpmInfo);
 
     tpmParam->chnlNumber = (tpm_chnl_t) kTPM_Chnl_1;
-    tpmParam->dutyCyclePercent = 0U;
+    tpmParam->dutyCyclePercent = 10U;
     tpmParam->level = kTPM_HighTrue;
 
-    TPM_SetupPwm(TPM0, tpmParam, 1U, kTPM_CenterAlignedPwm, 24000U, TPM_SOURCE_CLOCK);
+    TPM_SetupPwm(TPM0, tpmParam, 1U, kTPM_EdgeAlignedPwm, 50U, TPM_SOURCE_CLOCK);
     TPM_StartTimer(TPM0, kTPM_SystemClock);
 
 }

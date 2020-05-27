@@ -14,6 +14,7 @@ mcu_data: ksdk2_0
 processor_version: 7.0.1
 board: FRDM-KL25Z
 pin_labels:
+- {pin_num: '32', pin_signal: PTA12/TPM1_CH0, label: 'J1[8]/D3', identifier: PWM_1}
 - {pin_num: '56', pin_signal: ADC0_SE15/TSI0_CH14/PTC1/LLWU_P6/RTC_CLKIN/I2C1_SCL/TPM0_CH0, label: 'J10[12]/U6[31]/A5', identifier: LDR_IN}
 - {pin_num: '57', pin_signal: ADC0_SE11/TSI0_CH15/PTC2/I2C1_SDA/TPM0_CH1, label: 'J10[10]/A4', identifier: PWM_O}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
@@ -45,6 +46,7 @@ BOARD_InitPins:
   - {pin_num: '27', peripheral: UART0, signal: RX, pin_signal: TSI0_CH2/PTA1/UART0_RX/TPM2_CH0}
   - {pin_num: '56', peripheral: ADC0, signal: 'SE, 15', pin_signal: ADC0_SE15/TSI0_CH14/PTC1/LLWU_P6/RTC_CLKIN/I2C1_SCL/TPM0_CH0}
   - {pin_num: '57', peripheral: TPM0, signal: 'CH, 1', pin_signal: ADC0_SE11/TSI0_CH15/PTC2/I2C1_SDA/TPM0_CH1, direction: OUTPUT}
+  - {pin_num: '32', peripheral: TPM1, signal: 'CH, 0', pin_signal: PTA12/TPM1_CH0, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -65,6 +67,9 @@ void BOARD_InitPins(void)
     /* PORTA1 (pin 27) is configured as UART0_RX */
     PORT_SetPinMux(BOARD_INITPINS_DEBUG_UART_RX_PORT, BOARD_INITPINS_DEBUG_UART_RX_PIN, kPORT_MuxAlt2);
 
+    /* PORTA12 (pin 32) is configured as TPM1_CH0 */
+    PORT_SetPinMux(BOARD_INITPINS_PWM_1_PORT, BOARD_INITPINS_PWM_1_PIN, kPORT_MuxAlt3);
+
     /* PORTA2 (pin 28) is configured as UART0_TX */
     PORT_SetPinMux(BOARD_INITPINS_DEBUG_UART_TX_PORT, BOARD_INITPINS_DEBUG_UART_TX_PIN, kPORT_MuxAlt2);
 
@@ -73,6 +78,13 @@ void BOARD_InitPins(void)
 
     /* PORTC2 (pin 57) is configured as TPM0_CH1 */
     PORT_SetPinMux(BOARD_INITPINS_PWM_O_PORT, BOARD_INITPINS_PWM_O_PIN, kPORT_MuxAlt4);
+
+    SIM->SOPT4 = ((SIM->SOPT4 &
+                   /* Mask bits to zero which are setting */
+                   (~(SIM_SOPT4_TPM1CH0SRC_MASK)))
+
+                  /* TPM1 channel 0 input capture source select: TPM1_CH0 signal. */
+                  | SIM_SOPT4_TPM1CH0SRC(SOPT4_TPM1CH0SRC_TPM1_CH0));
 
     SIM->SOPT5 = ((SIM->SOPT5 &
                    /* Mask bits to zero which are setting */

@@ -76,7 +76,7 @@ void ReadLDR(void)
 		//wait...
 	}
 	adc = ADC16_GetChannelConversionValue(ADC0, ADC_CHANNEL_GROUP);
-	printf("%d\n", adc);
+	//printf("%d\n", adc);
 
 	//TPM_UpdatePwmDutycycle(TPM0, kTPM_Chnl_1, kTPM_CenterAlignedPwm, adc * 10);
 

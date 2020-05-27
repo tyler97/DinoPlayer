@@ -25,8 +25,9 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define SOPT5_UART0RXSRC_UART_RX 0x00u /*!<@brief UART0 receive data source select: UART0_RX pin */
-#define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART0 transmit data source select: UART0_TX pin */
+#define SOPT4_TPM1CH0SRC_TPM1_CH0 0x00u /*!<@brief TPM1 channel 0 input capture source select: TPM1_CH0 signal */
+#define SOPT5_UART0RXSRC_UART_RX 0x00u  /*!<@brief UART0 receive data source select: UART0_RX pin */
+#define SOPT5_UART0TXSRC_UART_TX 0x00u  /*!<@brief UART0 transmit data source select: UART0_TX pin */
 
 /*! @name PORTA2 (number 28), J1[4]/D1/UART0_TX
   @{ */
@@ -50,6 +51,12 @@ void BOARD_InitBootPins(void);
   @{ */
 #define BOARD_INITPINS_PWM_O_PORT PORTC /*!<@brief PORT device name: PORTC */
 #define BOARD_INITPINS_PWM_O_PIN 2U     /*!<@brief PORTC pin index: 2 */
+                                        /* @} */
+
+/*! @name PORTA12 (number 32), J1[8]/D3
+  @{ */
+#define BOARD_INITPINS_PWM_1_PORT PORTA /*!<@brief PORT device name: PORTA */
+#define BOARD_INITPINS_PWM_1_PIN 12U    /*!<@brief PORTA pin index: 12 */
                                         /* @} */
 
 /*!
