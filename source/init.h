@@ -21,6 +21,7 @@
 #define ADC_CHANNEL 15U
 #define ADC_CHANNEL_GROUP 0U
 #define TPM_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_PllFllSelClk)
+#define PIT_CLK_SRC_HZ_HP ((uint64_t)24000000)
 
 void InitBoard(void)
 {
@@ -77,5 +78,22 @@ void InitADC(adc16_config_t * adc16ConfigStruct, adc16_channel_config_t * adc16C
 	#endif /* FSL_FEATURE_ADC16_HAS_DIFF_MODE */
 
 }
+
+void InitPIT(pit_config_t * My_PIT)
+{
+
+    //Setting up Timer
+    PIT_GetDefaultConfig(My_PIT);
+    PIT_Init(PIT, My_PIT);
+
+    PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, MSEC_TO_COUNT(100,PIT_CLK_SRC_HZ_HP));
+    PIT_EnableInterrupts(PIT,kPIT_Chnl_0, kPIT_TimerInterruptEnable);
+    PIT_StopTimer(PIT, kPIT_Chnl_0);
+
+    //Enabling Interrupts
+    EnableIRQ(PIT_IRQn);
+
+}
+
 
 #endif /* INIT_H_ */

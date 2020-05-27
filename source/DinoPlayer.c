@@ -46,6 +46,9 @@ tpm_chnl_pwm_signal_param_t tpmParam;
 adc16_config_t adc16ConfigStruct;
 adc16_channel_config_t adc16ChannelConfigStruct;
 
+/* Variables for PIT */
+pit_config_t My_PIT;
+
 void InitAll(void);
 uint32_t ReadLDR(void);
 void PressDown(void);
@@ -62,13 +65,24 @@ int main(void) {
     	//Release();
 
     	uint32_t ldr = ReadLDR();
-    	// printf("%u\n", ldr);
+    	//printf("%u\n", ldr);
     	if(ldr >= 750){
     		Release();
     	}
     	else
     	{
     		PressDown();
+    		uint8_t flag = 1;
+    		PIT_StartTimer(PIT,kPIT_Chnl_0);
+    		while(flag)
+    		{
+    			uint32_t count = 100U - COUNT_TO_MSEC(PIT_GetCurrentTimerCount(PIT, kPIT_Chnl_0) , PIT_CLK_SRC_HZ_HP);
+    			if(count >= 80U)
+    			{
+    				flag = 0;
+    				PIT_StopTimer(PIT, kPIT_Chnl_0);
+    			}
+    		}
     	}
     }
     return 0 ;
@@ -107,5 +121,7 @@ void InitAll(void)
 	InitBoard();
 	InitADC(&adc16ConfigStruct, &adc16ChannelConfigStruct);
 	InitTPM(&tpmInfo, &tpmParam);
+	InitPIT(&My_PIT);
 
 }
+
